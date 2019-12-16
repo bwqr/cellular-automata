@@ -168,8 +168,11 @@ void worker::simulate() {
 }
 
 bool worker::alive_or_dead_central(int r, int c) {
-    return (cells[r - 1][c - 1] + cells[r - 1][c] + cells[r - 1][c + 1] + cells[r][c - 1] + cells[r][c + 1] +
-            cells[r + 1][c - 1] + cells[r + 1][c] + cells[r + 1][c + 1]) == 2;
+    int alive_neighbour = (cells[r - 1][c - 1] + cells[r - 1][c] + cells[r - 1][c + 1] + cells[r][c - 1] +
+                           cells[r][c + 1] +
+                           cells[r + 1][c - 1] + cells[r + 1][c] + cells[r + 1][c + 1]);
+    
+    return (cells[r][c] && (alive_neighbour == 2 || alive_neighbour == 3)) || (!cells[r][c] && alive_neighbour == 3);
 }
 
 bool worker::alive_or_dead_corner(int r, int c) {
@@ -188,10 +191,10 @@ bool worker::alive_or_dead_corner(int r, int c) {
                          cells[dim - 2][1] + cells[dim - 2][0]
                        :
                 rcells[dim + 1] + rcells[dim] + rcells[dim - 1] + dcells[dim - 1] + dcells[dim - 2] +
-                cells[dim - 1][dim - 2] + cells[dim - 2][dim - 2] + cells[dim - 2][dim - 2];
+                cells[dim - 1][dim - 2] + cells[dim - 2][dim - 2] + cells[dim - 2][dim - 1];
     }
 
-    return alive_neighbour == 2;
+    return (cells[r][c] && (alive_neighbour == 2 || alive_neighbour == 3)) || (!cells[r][c] && alive_neighbour == 3);
 }
 
 bool worker::alive_or_dead_edge(int r, int c) {
@@ -202,16 +205,16 @@ bool worker::alive_or_dead_edge(int r, int c) {
                           cells[0][c - 1] + cells[0][c + 1];
     } else if (c == 0) {
         alive_neighbour =
-                lcells[r - 1] + lcells[r] + lcells[r + 1] + cells[r - 1][0] + cells[r + 1][0] + cells[r - 1][1] +
+                lcells[r] + lcells[r + 1] + lcells[r + 2] + cells[r - 1][0] + cells[r + 1][0] + cells[r - 1][1] +
                 cells[r][1] + cells[r + 1][1];
     } else if (r == dim - 1) {
         alive_neighbour =
                 dcells[c] + dcells[c - 1] + dcells[c + 1] + cells[r][c - 1] + cells[r][c + 1] + cells[r - 1][c - 1] +
                 cells[r - 1][c] + cells[r - 1][c + 1];
     } else {
-        alive_neighbour = rcells[r - 1] + rcells[r] + rcells[r + 1] + cells[r - 1][c - 1] + cells[r][c - 1] +
+        alive_neighbour = rcells[r] + rcells[r + 1] + rcells[r + 2] + cells[r - 1][c - 1] + cells[r][c - 1] +
                           cells[r + 1][c - 1] + cells[r - 1][c] + cells[r + 1][c];
     }
 
-    return alive_neighbour == 2;
+    return (cells[r][c] && (alive_neighbour == 2 || alive_neighbour == 3)) || (!cells[r][c] && alive_neighbour == 3);
 }
