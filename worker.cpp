@@ -1,7 +1,6 @@
 #include <mpi.h>
 #include <iostream>
 #include <cmath>
-#include <zconf.h>
 #include "worker.h"
 
 worker::worker(int rank, int np, int dim, int turn) {
@@ -45,8 +44,8 @@ void worker::print() {
 void worker::run() {
     int up, down, right, left;
     up = find_rank(UP);
-    down = find_rank(DOWN),
-            right = find_rank(RIGHT);
+    down = find_rank(DOWN);
+    right = find_rank(RIGHT);
     left = find_rank(LEFT);
 
     bool clone_lcells[dim + 2], clone_rcells[dim + 2];
@@ -171,7 +170,7 @@ bool worker::alive_or_dead_central(int r, int c) {
     int alive_neighbour = (cells[r - 1][c - 1] + cells[r - 1][c] + cells[r - 1][c + 1] + cells[r][c - 1] +
                            cells[r][c + 1] +
                            cells[r + 1][c - 1] + cells[r + 1][c] + cells[r + 1][c + 1]);
-    
+
     return (cells[r][c] && (alive_neighbour == 2 || alive_neighbour == 3)) || (!cells[r][c] && alive_neighbour == 3);
 }
 
